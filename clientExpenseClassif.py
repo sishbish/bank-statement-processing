@@ -75,18 +75,18 @@ Create a JSON object for each category that contains transactions. Use this stru
   "transactions": [
     {
       "description": "TESCO STORES 1234",
-      "amount": "25.50"
+      "amount": -25.50
     },
     {
       "description": "MCDONALDS RESTAURANT", 
-      "amount": "8.99"
+      "amount": -8.99
     }
   ]
 }
 
 For each transaction, include:
 - "description": The transaction description from the input
-- "amount": The actual monetary value from either "Money In" or "Money Out" field (whichever has a value)
+- "amount": A NUMBER (not a string). If "Money In" has a value, use its numeric value (positive). If "Money Out" has a value, use its numeric value as NEGATIVE. Strip currency symbols and commas.
 
 If a category has no transactions, do not include it in the output.
 
@@ -97,7 +97,7 @@ Here are the transactions below:
 """
 output = []
 
-with open('extracted JSONs/NK.json', "r") as file:
+with open('extracted JSONs/RN copy.json', "r") as file:
     data = json.load(file)  
     file_content = json.dumps(data, indent=2)  
     fullPrompt = prompt + file_content
@@ -110,9 +110,10 @@ with open('extracted JSONs/NK.json', "r") as file:
             }
         ],
         model="llama-3.3-70b-versatile",
+        temperature=0,
     )
     output.append(chat_completion.choices[0].message.content)
     print(chat_completion.choices[0].message.content)
 
-with open('expense classification/NK.txt', "w") as file:
+with open('expense classification/RN.txt', "w") as file:
     file.write(chat_completion.choices[0].message.content)
